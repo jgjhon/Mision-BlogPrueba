@@ -7,11 +7,11 @@ import { Post } from './Models/post.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  storedPosts:Post[] = [];
+  //storedPosts:Post[] = [];
   title = 'Mision-Blog';
 
-  onPostAdded(post: Post){
-    this.storedPosts.push(post);
-    //this.posts.push(form.value);
-  }
+  // onPostAdded(post: Post){
+  //   this.storedPosts.push(post);
+  //   this.posts.push(form.value);
+  // }
 }

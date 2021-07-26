@@ -1,4 +1,6 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Post } from '../Models/post.model';
 
 @Injectable({
@@ -7,10 +9,20 @@ import { Post } from '../Models/post.model';
 export class PostService {
 
   posts: Post[] = [];
+  postUpdated = new Subject<Post[]>();
 
-  addPost(post: Post){
-    this.posts.push(post);
-  }
+    constructor() { }
 
-  constructor() { }
+    addPost(post: Post){
+      this.posts.push(post);
+      this.postUpdated.next([...this.posts]);
+    }
+
+    getPosts(){
+      return [...this.posts]; //para retornar una copia
+    }
+
+    getPostsUpdateListener(){
+      return this.postUpdated.asObservable();
+    }
 }

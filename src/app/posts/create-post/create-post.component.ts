@@ -19,7 +19,7 @@ export class CreatePostComponent implements OnInit {
   posts:Post[] = [];
 
 
-  @Output() postCreated = new EventEmitter<Post>();
+  //@Output() postCreated = new EventEmitter<Post>();
 
   constructor(public postService: PostService) { }
 
@@ -29,8 +29,8 @@ export class CreatePostComponent implements OnInit {
   onAddPost(form:NgForm):void{
 
     if(form.valid){
-      //this.postService.addPost(form.value);
-      this.postCreated.emit(form.value);
+      this.postService.addPost(form.value);
+      //this.postCreated.emit(form.value);
       form.resetForm();
     }
 

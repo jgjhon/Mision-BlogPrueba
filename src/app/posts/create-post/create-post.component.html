@@ -7,17 +7,19 @@
       type="text"
       name="title"
       ngModel
-      title="NgModel"
+      #title="ngModel"
       placeholder="Title"
       required
     />
-    <!-- <mat-error *ngIf="title.invalid"></mat-error> -->
+    <mat-error *ngIf="title.invalid">Campo inválido</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput type="text" name="summary" ngModel summary="NgModel" placeholder="Summary"/>
+    <input matInput type="text" name="summary" ngModel summary="ngModel" placeholder="Summary"/>
+
   </mat-form-field>
   <mat-form-field>
-    <textarea matInput name="content" ngModel content="ngModel" placeholder="Content" required></textarea>
+    <textarea matInput name="content" ngModel #content="ngModel" placeholder="Content" required></textarea>
+    <mat-error *ngIf="content.invalid">Campo inválido</mat-error>
   </mat-form-field>
   <button mat-raised-button color="primary" (click)="onAddPost(postForm)" type="Submit">Guardar</button>
 </form>

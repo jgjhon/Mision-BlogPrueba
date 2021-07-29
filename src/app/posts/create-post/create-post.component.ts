@@ -15,7 +15,7 @@ export class CreatePostComponent implements OnInit {
   //saludo:string = "Hola, esto es una prueba";
   //texto:string = "";
   //content:string[] = [];
-  postExample:Post[] = [{title: "Primer post",summary:"Este es el primer post",content:"este el contenido del post"}];
+  // postExample:Post[] = [{title: "Primer post",summary:"Este es el primer post",content:"este el contenido del post"}];
   posts:Post[] = [];
 
 

@@ -9,5 +9,9 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <p>{{post.content}}</p>
+    <mat-action-row>
+      <button mat-stroke-button color="primary">Editar</button>
+      <button mat-button color="warn" (click)="onDelete(post.id)">Eliminar</button>
+    </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>

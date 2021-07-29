@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; //se importó la libreria para ngmodel
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {HttpClientModule} from '@angular/common/http';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -33,7 +34,8 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     MatInputModule,
     MatExpansionModule,
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

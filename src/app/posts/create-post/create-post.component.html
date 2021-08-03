@@ -1,27 +1,26 @@
-<!--<p>{{saludo}}</p>
-<p *ngFor="let item of content">{{item}}</p>-->
-<form (Submit)="onAddPost(postForm)" #postForm="ngForm">
+<mat-card>
+<form (Submit)="onSavePost(postForm)" #postForm="ngForm">
   <mat-form-field>
     <input
       matInput
       type="text"
       name="title"
-      ngModel
-      #title="ngModel"
+      [ngModel] = post.title
+      #title= "ngModel"
       placeholder="Title"
       required
     />
     <mat-error *ngIf="title.invalid">Campo inválido</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput type="text" name="summary" ngModel summary="ngModel" placeholder="Summary"/>
-
+    <input matInput type="text" name="summary" [ngModel]= post.summary summary="ngModel" placeholder="Summary"/>
   </mat-form-field>
   <mat-form-field>
-    <textarea matInput name="content" ngModel #content="ngModel" placeholder="Content" required></textarea>
+    <textarea matInput name="content" [ngModel]= post.content #content="ngModel" placeholder="Content" required></textarea>
     <mat-error *ngIf="content.invalid">Campo inválido</mat-error>
   </mat-form-field>
-  <button mat-raised-button color="primary" (click)="onAddPost(postForm)" type="Submit">Guardar</button>
+  <!-- <button mat-raised-button color="primary" (click)="onAddPost(postForm)" type="Submit" routerLink=''>Guardar</button> -->
+  <button mat-raised-button color="primary" (click)="onSavePost(postForm)" type="Submit" routerLink="">Guardar</button>
 </form>
-
+</mat-card>
 

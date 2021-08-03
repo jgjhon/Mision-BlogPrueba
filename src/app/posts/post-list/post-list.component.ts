@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Form } from '@angular/forms';
-import { PostService } from 'src/app/services/post.service';
+import { PostService } from 'src/app/services/post/post.service';
 import { Post } from '../../Models/post.model';
 
 @Component({

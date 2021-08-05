@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   getIsAuthenticated(){
-    this.isAuthenticated;
+    return this.isAuthenticated;
   }
 
   getAuthStatusListener(){

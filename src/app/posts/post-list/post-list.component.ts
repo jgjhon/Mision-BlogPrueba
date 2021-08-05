@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { Form } from '@angular/forms';
 import { PostService } from 'src/app/services/post/post.service';
 import { Post } from '../../Models/post.model';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-post-list',
@@ -10,12 +11,14 @@ import { Post } from '../../Models/post.model';
   styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
-  // @Input() posts: Post[] = [];
+
+  isAuth = false;
+  private authListenerSub!: Subscription;
 
   posts: Post[] = [];
   postsSub: Subscription;
 
-  constructor(public postService: PostService) {
+  constructor(public postService: PostService, public authService: AuthService) {
     this.postsSub = this.postService.getPostsUpdateListener()
     .subscribe((posts:Post[])=>{
       this.posts = posts;
@@ -27,6 +30,11 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postsSub = this.postService.getPostsUpdateListener()
     .subscribe((posts:Post[])=>{
       this.posts = posts;
+    });
+    this.isAuth = this.authService.getIsAuthenticated();
+
+    this.authListenerSub = this.authService.getAuthStatusListener().subscribe((isAuthenticated) => {
+      this.isAuth = isAuthenticated;
     });
 
   }

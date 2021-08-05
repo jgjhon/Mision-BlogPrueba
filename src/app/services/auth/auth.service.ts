@@ -53,4 +53,11 @@ export class AuthService {
       }
     });
   }
+
+  logout(){
+    this.token = "";
+    this.isAuthenticated = false;
+    this.authStatusListener.next(false);
+    this.router.navigate(['/']);
+  }
 }

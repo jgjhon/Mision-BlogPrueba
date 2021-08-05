@@ -12,9 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cors());
 
-//password: cCJzlB5KkTf3qvCT
+//password: Qmxbz28Wxvuiu3T
 mongoose.connect(
-  "mongodb+srv://admin:cCJzlB5KkTf3qvCT@cluster0.fk1cw.mongodb.net/MisionBlog?retryWrites=true&w=majority",
+  "mongodb+srv://admin:Qmxbz28Wxvuiu3T@cluster0.fk1cw.mongodb.net/MisionBlog?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}
   ).then(() => {
     console.log("Estamos conectados a la base de datos");

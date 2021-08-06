@@ -43,12 +43,17 @@ export class AuthService {
 
   login(email: string, password: string){
     this.http
-    .post<{token: string}>(this.url+"/login",{ email,  password  })
+    .post<{token: string, expiresIn: number} >(this.url+"/login",{ email,  password  })
     .subscribe((response) => {
       this.token = response.token;
       if(this.token){
+        const expirationInDuration = response.expiresIn;
+        this.setAuthTimer(expirationInDuration);
         this.isAuthenticated = true;
         this.authStatusListener.next(true);
+        const now = new Date();
+        const expirationDate = new Date(now.getTime() + expirationInDuration*1000);
+        this.saveAuthData(this.token, expirationDate);
         this.router.navigate(["/"]);
       }
     });
@@ -58,6 +63,51 @@ export class AuthService {
     this.token = "";
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
+    this.clearAuthData();
     this.router.navigate(['/']);
+  }
+
+  //para mantener sesion abierta aun reiniciando el servidor
+  private saveAuthData(token: string, expirationDate: Date){
+    localStorage.setItem('token',token);
+    localStorage.setItem('expiration',expirationDate.toISOString());
+  }
+
+  private clearAuthData(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('expiration');
+  }
+
+  private getAuthData(){
+    const token = localStorage.getItem('token');
+    const expirationDate = new Date(localStorage.getItem('expiration')!);
+    if(!token || !expirationDate){
+      return;
+    }
+    return{
+      token: token,
+      expirationDate: expirationDate,
+    };
+  }
+
+  private setAuthTimer(duration: number){
+    setTimeout(() =>{
+      this.logout()
+    }, duration*1000);//para que lo haga cada hora
+  }
+
+  autoAuthUser(){
+    const authInfo = this.getAuthData();
+    if(!authInfo){
+      return;
+    }
+    const now = new Date();
+    const expiresIn = authInfo.expirationDate.getTime() - now.getTime();
+    if(expiresIn>0){
+      this.token = localStorage.getItem('token')!;
+      this.isAuthenticated = true;
+      this.setAuthTimer(expiresIn/1000);
+      this.authStatusListener.next(true);
+    }
   }
 }

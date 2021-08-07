@@ -27,7 +27,7 @@ export class CreatePostComponent implements OnInit {
   //@Output() postCreated = new EventEmitter<Post>();
 
   constructor(public postService: PostService, public  route: ActivatedRoute) {
-    this.post = {id:"",title:"",summary:"",content:""};
+    this.post = {id:"",title:"",summary:"",content:"",author:""};
    }
 
   ngOnInit(): void {
@@ -36,7 +36,7 @@ export class CreatePostComponent implements OnInit {
         this.isEditing = true;
         this.postId = paramMap.get("postId")!;
         this.postService.getPost(this.postId).subscribe((postData) =>{
-          this.post = {id:postData._id, title:postData.title, summary:postData.summary, content:postData.content}
+          this.post = {id:postData._id, title:postData.title, summary:postData.summary, content:postData.content, author:postData.author}
         })
       }else{
         this.isEditing = false;

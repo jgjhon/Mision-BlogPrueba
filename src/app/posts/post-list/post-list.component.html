@@ -9,7 +9,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <p>{{post.content}}</p>
-    <mat-action-row *ngIf="isAuth">
+    <mat-action-row *ngIf="isAuth && post.author == userId">
       <button mat-stroke-button color="primary" [routerLink]="['/edit',post.id]">Editar</button>
       <button mat-button color="warn" (click)="onDelete(post.id)">Eliminar</button>
     </mat-action-row>

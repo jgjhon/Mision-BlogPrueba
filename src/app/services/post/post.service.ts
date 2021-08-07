@@ -32,12 +32,13 @@ export class PostService {
 
     getPosts(){
       this.http.get<any>(this.url).pipe(map((postData) =>{
-        return postData.map((post:{_id:string,title:string,summary:string,content:string})=>{
+        return postData.map((post:{_id:string,title:string,summary:string,content:string,author:string})=>{
           return {
             id:post._id,
             title:post.title,
             summary:post.summary,
             content:post.content,
+            author:post.author,
           }
         })
       })).subscribe(
@@ -50,7 +51,7 @@ export class PostService {
     };
 
     getPost(id:string){
-      return this.http.get<{_id:string,title:string,summary:string,content:string}>(this.url+"/"+id);
+      return this.http.get<{_id:string,title:string,summary:string,content:string,author:string}>(this.url+"/"+id);
     }
 
     deletePost(id: string) {

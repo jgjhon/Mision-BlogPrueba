@@ -30,6 +30,7 @@ router.post("", checkAuth, (req,res) =>{
     title: req.body.title,
     summary: req.body.summary,
     content: req.body.content,
+    author: req.userData.userId,
   });
   postForAdd.save().then((createdPost) => {
     res.status(201).json({
@@ -42,8 +43,13 @@ router.post("", checkAuth, (req,res) =>{
 
 router.delete("/:id", checkAuth, (req, res) => {
     Post.deleteOne({ _id:req.params.id }).then((result) =>{
-    console.log(result);
-    res.status(200).json({message: "Post Eliminado"});
+      if(result.n>0){
+        console.log(result);
+        res.status(200).json({message: "Post Eliminado"});
+      }else{
+        res.status(401).json({message: "Autenticación fallida"});
+      }
+
   });
 });
 
@@ -59,7 +65,12 @@ router.put("/:id", checkAuth, (req,res) => {
   });
   Post.updateOne({_id: req.params.id},post).then((result) =>{
     console.log(result);
-    res.status(200).json({message: "Actualización ejecutada"})
+    if(result.nModified>0){
+      res.status(200).json({message: "Actualización ejecutada"});
+    }else{
+      res.status(401).json({message: "Autenticación fallida"});
+    }
+
   })
 });
 

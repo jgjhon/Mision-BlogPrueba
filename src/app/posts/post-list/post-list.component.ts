@@ -4,6 +4,7 @@ import { Form } from '@angular/forms';
 import { PostService } from 'src/app/services/post/post.service';
 import { Post } from '../../Models/post.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { User } from 'src/app/Models/user.model';
 
 @Component({
   selector: 'app-post-list',
@@ -13,6 +14,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class PostListComponent implements OnInit, OnDestroy {
 
   isAuth = false;
+  userId! : string;
   private authListenerSub!: Subscription;
 
   posts: Post[] = [];
@@ -27,6 +29,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.postService.getPosts();
+    this.userId = this.authService.getUserId();
     this.postsSub = this.postService.getPostsUpdateListener()
     .subscribe((posts:Post[])=>{
       this.posts = posts;
@@ -35,6 +38,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
     this.authListenerSub = this.authService.getAuthStatusListener().subscribe((isAuthenticated) => {
       this.isAuth = isAuthenticated;
+      this.userId = this.authService.getUserId();
     });
 
   }

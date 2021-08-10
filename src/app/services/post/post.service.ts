@@ -20,8 +20,13 @@ export class PostService {
 
     constructor(private http:HttpClient, private router: Router) { }
 
-    addPost(post: Post){
-      this.http.post<{idPostAdded: string}>(this.url,post).subscribe((response) =>{
+    addPost(post: Post, image: File){
+      const postData = new FormData();
+      postData.append("title", post.title);
+      postData.append("summary", post.summary);
+      postData.append("content", post.content);
+      postData.append("image", image, post.title);
+      this.http.post<{idPostAdded: string}>(this.url, postData).subscribe((response) =>{
         console.log(response);
         post.id = response.idPostAdded;
         this.posts.push(post);

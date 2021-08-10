@@ -3,6 +3,7 @@ import { Post } from '../../Models/post.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostService } from 'src/app/services/post/post.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { mimeType } from './mime-type.validator';
 
 //import { MatExpansionModule } from '@angular/material/expansion';
 
@@ -35,9 +36,9 @@ export class CreatePostComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup({
       title: new FormControl(null, {validators:[Validators.required]}),
-      summary: new FormControl(null),
+      summary: new FormControl(),
       content: new FormControl(null, {validators:[Validators.required]}),
-      image: new FormControl(null, {validators: Validators.required}),
+      image: new FormControl(null, {validators: [Validators.required], asyncValidators:[mimeType] }),
     })
     this.route.paramMap.subscribe((paramMap:ParamMap) =>{
       if (paramMap.has("postId")){
@@ -61,7 +62,15 @@ export class CreatePostComponent implements OnInit {
     if(this.isEditing){
       this.postService.updatePost(this.form.value,this.postId);
     }else{
-      this.postService.addPost(this.form.value);
+      console.log(this.form.value);
+      const postInfo : Post = {
+        id: this.form.value.id,
+        title: this.form.value.title,
+        summary: this.form.value.summary,
+        content: this.form.value.content,
+        author: '',
+      };
+      this.postService.addPost(postInfo, this.form.value.image);
     }
     this.form.reset();
   }

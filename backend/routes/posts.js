@@ -1,9 +1,32 @@
 const express = require("express");
+const multer = require("multer");
 const Post = require("../models/post");
 
 const router = express.Router();
 
 const checkAuth = require("../middleware/check-auth");
+
+const MIME_TYPES = {
+  "image/png": "png",
+  "image/jpeg": "jpeg",
+  "image/jpg": "jpg",
+}
+
+const storage = multer.diskStorage({
+  destination: (req,file,cb) => {
+    console.log(file);
+    const isValid = MIME_TYPES[file.mimetype];
+    let error = new Error("El tipo de archivo no es válido");
+    if(isValid){
+      error = null;
+    }
+    cb(error,"backend/files");
+  }, filename:(req,file,cb) => {
+    const name = file.originalname.toLowerCase().split(" ").join("-");
+    const ext = MIME_TYPES[file.mimetype];
+    cb(null, name+"-"+Date.now()+"."+ext);
+  }
+})
 
 router.get("", (req, res) => {
   Post.find().then((postResult) =>{
@@ -25,12 +48,14 @@ router.get("/:id", (req, res) => {
 
 });
 
-router.post("", checkAuth, (req,res) =>{
+router.post("", checkAuth, multer({storage: storage}).single("image"),(req,res) =>{
   console.log(req.body);
+  const url = req.protocol+"://"+req.get("host");
   const postForAdd = new Post({
     title: req.body.title,
     summary: req.body.summary,
     content: req.body.content,
+    imageUrl: url+"/files/"+req.file.filename,
     author: req.userData.userId,
   });
   postForAdd.save().then((createdPost) => {

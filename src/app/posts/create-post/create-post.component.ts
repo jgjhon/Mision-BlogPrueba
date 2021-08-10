@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Post } from '../../Models/post.model';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostService } from 'src/app/services/post/post.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -15,6 +15,8 @@ export class CreatePostComponent implements OnInit {
   private isEditing = false;
   private postId!: string;
   post!:Post;
+  form!: FormGroup;
+  imagePreview!: string;
 
 
   //saludo:string = "Hola, esto es una prueba";
@@ -31,6 +33,12 @@ export class CreatePostComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.form = new FormGroup({
+      title: new FormControl(null, {validators:[Validators.required]}),
+      summary: new FormControl(null),
+      content: new FormControl(null, {validators:[Validators.required]}),
+      image: new FormControl(null, {validators: Validators.required}),
+    })
     this.route.paramMap.subscribe((paramMap:ParamMap) =>{
       if (paramMap.has("postId")){
         this.isEditing = true;
@@ -46,15 +54,26 @@ export class CreatePostComponent implements OnInit {
     })
   }
 
-  onSavePost(form:NgForm):void{
-    if(form.invalid){
+  onSavePost():void{
+    if(this.form.invalid){
       return;
     }
     if(this.isEditing){
-      this.postService.updatePost(form.value,this.postId);
+      this.postService.updatePost(this.form.value,this.postId);
     }else{
-      this.postService.addPost(form.value);
+      this.postService.addPost(this.form.value);
     }
-    form.resetForm();
+    this.form.reset();
+  }
+
+  onImageSelected(event: Event){
+    const file = (event.target as HTMLInputElement).files![0];
+    this.form.patchValue({image: file});
+    this.form.get('image')?.updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    }
+    reader.readAsDataURL(file);
   }
 }

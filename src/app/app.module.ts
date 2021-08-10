@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; //se importó la libreria para ngmodel
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; //se importó la libreria para ngmodel
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
@@ -43,7 +43,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     MatToolbarModule,
     MatButtonModule,
     HttpClientModule,
-    MatCardModule
+    MatCardModule,
+    ReactiveFormsModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true}],
   bootstrap: [AppComponent]

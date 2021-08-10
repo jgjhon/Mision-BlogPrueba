@@ -32,7 +32,7 @@ export class PostService {
 
     getPosts(){
       this.http.get<any>(this.url).pipe(map((postData) =>{
-        return postData.map((post:{_id:string,title:string,summary:string,content:string,author:string})=>{
+        return postData.map((post:{_id:string;title:string;summary:string;content:string;author: string;})=>{
           return {
             id:post._id,
             title:post.title,

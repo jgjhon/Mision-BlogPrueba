@@ -7,6 +7,7 @@ const checkAuth = require("../middleware/check-auth");
 
 router.get("", (req, res) => {
   Post.find().then((postResult) =>{
+    console.log(postResult);
     res.status(200).json(postResult);
   });
 

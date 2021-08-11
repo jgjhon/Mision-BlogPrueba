@@ -26,9 +26,10 @@ export class PostService {
       postData.append("summary", post.summary);
       postData.append("content", post.content);
       postData.append("image", image, post.title);
-      this.http.post<{idPostAdded: string}>(this.url, postData).subscribe((response) =>{
+      this.http.post<{post: Post}>(this.url, postData).subscribe((response) =>{
         console.log(response);
-        post.id = response.idPostAdded;
+        post.id = response.post.id;
+        post.imageUrl = response.post.imageUrl;
         this.posts.push(post);
         this.postUpdated.next([...this.posts]);
         this.router.navigate(["/"]);
@@ -37,12 +38,13 @@ export class PostService {
 
     getPosts(){
       this.http.get<any>(this.url).pipe(map((postData) =>{
-        return postData.map((post:{_id:string;title:string;summary:string;content:string;author: string;})=>{
+        return postData.map((post:{_id:string;title:string;summary:string;content:string;imageUrl:string;author: string;})=>{
           return {
             id:post._id,
             title:post.title,
             summary:post.summary,
             content:post.content,
+            imageUrl:post.imageUrl,
             author:post.author,
           }
         })
@@ -56,7 +58,7 @@ export class PostService {
     };
 
     getPost(id:string){
-      return this.http.get<{_id:string,title:string,summary:string,content:string,author:string}>(this.url+"/"+id);
+      return this.http.get<{_id:string,title:string,summary:string,content:string,imageUrl:string,author:string}>(this.url+"/"+id);
     }
 
     deletePost(id: string) {
@@ -72,8 +74,20 @@ export class PostService {
       return this.postUpdated.asObservable();
     }
 
-    updatePost(post: Post, id:string){
-      this.http.put(this.url+"/"+id,post).subscribe((result) =>{
+    updatePost(post: Post, id:string, image: File | string){
+      let postData: Post | FormData;
+      if(typeof image === "object"){
+        postData = new FormData();
+        postData.append("id", id);
+        postData.append("title", post.title);
+        postData.append("summary", post.summary);
+        postData.append("content", post.content);
+        postData.append("image", image, post.title);
+      }else{
+        postData = post;
+      }
+
+      this.http.put(this.url+"/"+id, postData).subscribe((result) =>{
         const updatedPost =  [...this.posts];
         const oldPostIndex = updatedPost.findIndex(p => p.id === post.id);
         updatedPost[oldPostIndex] = post;

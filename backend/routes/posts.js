@@ -14,7 +14,7 @@ const MIME_TYPES = {
 
 const storage = multer.diskStorage({
   destination: (req,file,cb) => {
-    console.log(file);
+    // console.log(file);
     const isValid = MIME_TYPES[file.mimetype];
     let error = new Error("El tipo de archivo no es válido");
     if(isValid){
@@ -59,9 +59,12 @@ router.post("", checkAuth, multer({storage: storage}).single("image"),(req,res) 
     author: req.userData.userId,
   });
   postForAdd.save().then((createdPost) => {
+    console.log("Agregado el post de manera exitosa!");
     res.status(201).json({
-      idPostAdded: createdPost._id,
-      message: "Post agregado",
+      post:{
+        ...postForAdd,
+        idPostAdded: createdPost._id,
+      },
     });
   });
 
@@ -79,15 +82,22 @@ router.delete("/:id", checkAuth, (req, res) => {
   });
 });
 
-router.put("/:id", checkAuth, (req,res) => {
-  console.log("Actualizado")
-  // console.log(req.body)
-  // console.log(req.params.id)
+router.put("/:id", checkAuth, multer({storage: storage}).single("image"),(req,res) => {
+  let image = "";
+  if(req.file){
+    const url = req.protocol + "://" + req.get("host");
+    image = url + "/files/" + req.file.filename;
+  }else{
+    image = req.body.imageUrl;
+  }
+
   const post = new Post({
     _id: req.params.id,
     title: req.body.title,
     summary: req.body.summary,
     content: req.body.content,
+    imageUrl: image,
+    author: req.userData.userId,
   });
   Post.updateOne({_id: req.params.id},post).then((result) =>{
     console.log(result);
